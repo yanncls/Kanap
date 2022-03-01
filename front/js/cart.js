@@ -14,6 +14,9 @@ AFFECTER chaque value selon sa key à son élément html
 let basket = localStorage.getItem("basket");
 basket = JSON.parse(basket);
 
+let contact = localStorage.getItem('contact');
+contact = JSON.parse(contact);
+
 // Affichage du panier et calcul quantité et prix 
 async function sumBasket(basket) {
   let totalPrice = 0
@@ -106,7 +109,7 @@ function addQtyListeners() {
 let form = document.querySelector('.cart__order__form');
 
 // créer tableau form
-let formTab = [];
+// let contact = [];
 
 // ecouter la modification du prénom
 form.firstName.addEventListener('change', function () {
@@ -123,39 +126,52 @@ form.address.addEventListener('change', function () {
   validAddress(this)
 });
 
+// ecouter la modification du champ ville
+form.city.addEventListener('change', function () {
+  validCity(this)
+});
+
+// ecouter la modification du champ ville
+form.email.addEventListener('change', function () {
+  validEmail(this)
+});
+
 // validation First Name
 const validFirstName = function (inputFirstName) {
   let firstNameRegExp = new RegExp(
     /^[a-zA-Z ,'-]+$/g
   );
   // test de l'expression reguliere
-  let testName = firstNameRegExp.test(inputFirstName.value);
+  let testFirstName = firstNameRegExp.test(inputFirstName.value);
 
   // récupére la balise p
   let p = document.querySelector('#firstNameErrorMsg');
 
-  if (!testName) {
+  if (!testFirstName) {
     p.innerHTML = "Le prénom n'est pas valide"
+    console.log(false);
+    return false;
   }
   else {
     p.innerHTML = ""
-    inputFirstName.value.push(formTab)
+    return true;
+
 
   }
 };
-console.log(formTab)
+
 // validation Last Name
 const validLastName = function (inputLastName) {
   let lastNameRegExp = new RegExp(
     /^[a-zA-Z ,'-]+$/g
   );
   // test de l'expression reguliere
-  let testName = lastNameRegExp.test(inputLastName.value);
+  let testLastName = lastNameRegExp.test(inputLastName.value);
 
   // récupére la balise p
   let p = document.querySelector('#lastNameErrorMsg');
 
-  if (!testName) {
+  if (!testLastName) {
     p.innerHTML = "Le nom n'est pas valide";
   }
   else {
@@ -165,7 +181,7 @@ const validLastName = function (inputLastName) {
 
 const validAddress = function (inputAdress) {
   let adressRegExp = new RegExp(
-    /^[a-zA-Z0-9, '-]+$/
+    /\d+(\s\w*)*/
   );
 
   let testAdress = adressRegExp.test(inputAdress.value);
@@ -180,7 +196,101 @@ const validAddress = function (inputAdress) {
   }
 }
 
+const validCity = function (inputCity) {
+  let cityRegExp = new RegExp(
+    /^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/
+  );
 
+  let testCity = cityRegExp.test(inputCity.value);
+
+  let p = document.querySelector('#cityErrorMsg');
+
+  if (!testCity) {
+    p.innerHTML = "La ville n'est pas valide";
+  }
+  else {
+    p.innerHTML = "";
+  }
+}
+
+const validEmail = function (inputEmail) {
+  let emailRegExp = new RegExp(
+    /^([a-zA-Z0-9_\.-]+)@([da-z\.-]+)\.([a-z\.]{2,6})$/
+  );
+
+  let testEmail = emailRegExp.test(inputEmail.value);
+
+  let p = document.querySelector('#emailErrorMsg');
+
+  if (!testEmail) {
+    p.innerHTML = "L'adresse mail n'est pas valide'";
+  }
+  else {
+    p.innerHTML = "";
+    storeValue(inputEmail.value)
+  }
+}
+
+// récupérer les données submit
+const postForm = document.querySelector('input#order');
+postForm.addEventListener('click', () => {
+  const firstName = document.querySelector('#firstName').value;
+  const lastName = document.querySelector('#lastName').value;
+  const adress = document.querySelector('#address').value;
+  const city = document.querySelector('#city').value;
+  const email = document.querySelector('#email').value;
+  let form = { firstName, lastName, adress, city, email };
+  // let contact = { name: 'georges', age: 17 }
+  console.log(form)
+  addContact(form)
+  checkIsValid()
+})
+
+// function create() {
+//   let contact = { name: 'georges', age: 17 }
+//   console.log(contact)
+//   addForm(contact)
+// }
+
+function addContact(form) {
+  let contact = getContact();
+
+  contact.push(form)
+  console.log(contact)
+  saveContact(contact)
+}
+
+// vérifier si un formulaire est existant 
+function getContact() {
+  let contact = localStorage.getItem('contact');
+  if (contact == null) {
+    return [];
+  } else {
+    return JSON.parse(contact)
+  }
+}
+
+function saveContact(contact) {
+  localStorage.setItem('contact', JSON.stringify(contact));
+}
+
+
+function checkIsValid() {
+  let basket = localStorage.getItem('basket');
+  let contact = localStorage.getItem('contact');
+  let options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(basket)
+  };
+  if (basket && contact) {
+    fetch('http://localhost:3000/api/products/order', options)
+      .then(res => console.log(res.body))
+      .catch(err => console.error(err))
+  }
+}
 
 
 
