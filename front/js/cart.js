@@ -223,9 +223,11 @@ function send(contact, products) {
     // traitement de la reponse api
     .then(function (res) {
       res.json().then(data => {
+        console.log(data)
         //isoler l'objet orderId
         let id = data[Object.keys(data)[Object.keys(data).length - 1]]
         // passer l'id dans l'url
+        console.log(id)
         window.location.href = `confirmation.html?orderId=${id}`
       })
     })
