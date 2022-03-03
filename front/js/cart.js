@@ -108,189 +108,129 @@ function addQtyListeners() {
 // cibler le formulaire
 let form = document.querySelector('.cart__order__form');
 
-// créer tableau form
-// let contact = [];
-
 // ecouter la modification du prénom
 form.firstName.addEventListener('change', function () {
-  validFirstName(this)
+  validInput(this.value, "firstName")
 });
 
 // ecouter la modification du nom
 form.lastName.addEventListener('change', function () {
-  validLastName(this)
+  validInput(this.value, "lastName")
+  // validLastName(this)
 });
 
 // ecouter la modification du champ adresse
 form.address.addEventListener('change', function () {
-  validAddress(this)
+  validInput(this.value, "address")
+  // validAddress(this)
 });
 
 // ecouter la modification du champ ville
 form.city.addEventListener('change', function () {
-  validCity(this)
+  validInput(this.value, "city")
 });
 
 // ecouter la modification du champ ville
 form.email.addEventListener('change', function () {
-  validEmail(this)
+  validInput(this.value, "email")
 });
 
-// validation First Name
-const validFirstName = function (inputFirstName) {
-  let firstNameRegExp = new RegExp(
-    /^[a-zA-Z ,'-]+$/g
-  );
+
+// isoler les variables dans un tab
+const validationFuncs = {
+  firstName: {
+    regex: /^[a-zA-Z ,'-]+$/g,
+    errorMsgId: "#firstNameErrorMsg",
+    errorMsg: "Le prénom n'est pas valide"
+  },
+  lastName: {
+    regex: /^[a-zA-Z ,'-]+$/g,
+    errorMsgId: "#lastNameErrorMsg",
+    errorMsg: "Le nom n'est pas valide"
+  },
+  address: {
+    regex: /\d+(\s\w*)*/g,
+    errorMsgId: "#addressErrorMsg",
+    errorMsg: "L'adresse n'est pas valide"
+  },
+  city: {
+    regex: /^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/g,
+    errorMsgId: "#cityErrorMsg",
+    errorMsg: "La ville n'est pas valide'"
+  },
+  email: {
+    regex: /^([a-zA-Z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
+    errorMsgId: "#emailErrorMsg",
+    errorMsg: "L'adresse mail n'est pas valide"
+  }
+}
+
+const validInput = function (value, funcName) {
+  const { regex, errorMsgId, errorMsg } = validationFuncs[funcName];
+  let inputRegex = new RegExp(regex);
   // test de l'expression reguliere
-  let testFirstName = firstNameRegExp.test(inputFirstName.value);
-
+  let test = inputRegex.test(value);
   // récupére la balise p
-  let p = document.querySelector('#firstNameErrorMsg');
+  let p = document.querySelector(errorMsgId);
 
-  if (!testFirstName) {
-    p.innerHTML = "Le prénom n'est pas valide"
-    console.log(false);
+  if (!test) {
+    p.innerHTML = errorMsg;
     return false;
   }
   else {
-    p.innerHTML = ""
+    p.innerHTML = "";
     return true;
-
-
-  }
-};
-
-// validation Last Name
-const validLastName = function (inputLastName) {
-  let lastNameRegExp = new RegExp(
-    /^[a-zA-Z ,'-]+$/g
-  );
-  // test de l'expression reguliere
-  let testLastName = lastNameRegExp.test(inputLastName.value);
-
-  // récupére la balise p
-  let p = document.querySelector('#lastNameErrorMsg');
-
-  if (!testLastName) {
-    p.innerHTML = "Le nom n'est pas valide";
-  }
-  else {
-    p.innerHTML = "";
-  }
-};
-
-const validAddress = function (inputAdress) {
-  let adressRegExp = new RegExp(
-    /\d+(\s\w*)*/
-  );
-
-  let testAdress = adressRegExp.test(inputAdress.value);
-
-  let p = document.querySelector('#addressErrorMsg');
-
-  if (!testAdress) {
-    p.innerHTML = "L'adresse n'est pas valide";
-  }
-  else {
-    p.innerHTML = "";
-  }
-}
-
-const validCity = function (inputCity) {
-  let cityRegExp = new RegExp(
-    /^[a-zA-Z]+(?:[\s-][a-zA-Z]+)*$/
-  );
-
-  let testCity = cityRegExp.test(inputCity.value);
-
-  let p = document.querySelector('#cityErrorMsg');
-
-  if (!testCity) {
-    p.innerHTML = "La ville n'est pas valide";
-  }
-  else {
-    p.innerHTML = "";
-  }
-}
-
-const validEmail = function (inputEmail) {
-  let emailRegExp = new RegExp(
-    /^([a-zA-Z0-9_\.-]+)@([da-z\.-]+)\.([a-z\.]{2,6})$/
-  );
-
-  let testEmail = emailRegExp.test(inputEmail.value);
-
-  let p = document.querySelector('#emailErrorMsg');
-
-  if (!testEmail) {
-    p.innerHTML = "L'adresse mail n'est pas valide'";
-  }
-  else {
-    p.innerHTML = "";
-    storeValue(inputEmail.value)
   }
 }
 
 // récupérer les données submit
 const postForm = document.querySelector('input#order');
-postForm.addEventListener('click', () => {
+postForm.addEventListener('click', (e) => {
+  e.preventDefault();
   const firstName = document.querySelector('#firstName').value;
   const lastName = document.querySelector('#lastName').value;
-  const adress = document.querySelector('#address').value;
+  const address = document.querySelector('#address').value;
   const city = document.querySelector('#city').value;
   const email = document.querySelector('#email').value;
-  let form = { firstName, lastName, adress, city, email };
-  // let contact = { name: 'georges', age: 17 }
-  console.log(form)
-  addContact(form)
-  checkIsValid()
+  // condition à valider avant l'envoi
+  if (validInput(firstName, "firstName") &&
+    validInput(lastName, "lastName") &&
+    validInput(address, "address") &&
+    validInput(city, "city") &&
+    validInput(email, "email")
+  ) {
+    // création des items attendu par l'api puis envoie
+    let contact = { firstName, lastName, address, city, email };
+    let products = basket.map(elem => elem.idItem)
+    send(contact, products);
+  }
+  return
 })
 
-// function create() {
-//   let contact = { name: 'georges', age: 17 }
-//   console.log(contact)
-//   addForm(contact)
-// }
 
-function addContact(form) {
-  let contact = getContact();
-
-  contact.push(form)
-  console.log(contact)
-  saveContact(contact)
-}
-
-// vérifier si un formulaire est existant 
-function getContact() {
-  let contact = localStorage.getItem('contact');
-  if (contact == null) {
-    return [];
-  } else {
-    return JSON.parse(contact)
-  }
-}
-
-function saveContact(contact) {
-  localStorage.setItem('contact', JSON.stringify(contact));
-}
-
-
-function checkIsValid() {
-  let basket = localStorage.getItem('basket');
-  let contact = localStorage.getItem('contact');
-  let options = {
+// POST form to API
+function send(contact, products) {
+  fetch('http://localhost:3000/api/products/order', {
     method: 'POST',
     headers: {
+      'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(basket)
-  };
-  if (basket && contact) {
-    fetch('http://localhost:3000/api/products/order', options)
-      .then(res => console.log(res.body))
-      .catch(err => console.error(err))
-  }
+    body: JSON.stringify({
+      contact, products
+    })
+  })
+    // traitement de la reponse api
+    .then(function (res) {
+      res.json().then(data => {
+        //isoler l'objet orderId
+        let id = data[Object.keys(data)[Object.keys(data).length - 1]]
+        // passer l'id dans l'url
+        window.location.href = `confirmation.html?orderId=${id}`
+      })
+    })
 }
+
 
 
 

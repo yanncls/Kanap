@@ -36,7 +36,7 @@ function showProduct(product) {
     // document.querySelector('.item__img').appendChild(document.createElement('img'));
     // document.querySelector('.item__img img').src = product.imageUrl;
     // document.querySelector('.item__img img').alt = product.altTxt;
-    document.querySelector('.item__img').innerHTML = `<img src="${product.imageURL}" alt="${product.altTxt}">`;
+    document.querySelector('.item__img').innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
     const colors = document.querySelector('#colors');
     for (let color of product.colors) {
         colors.innerHTML += `<option value="${color}">${color}</option>`
