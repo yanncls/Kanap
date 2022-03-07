@@ -33,6 +33,7 @@ function showProduct(product) {
     document.getElementById('title').textContent = product.name;
     document.getElementById('price').textContent = product.price;
     document.getElementById('description').textContent = product.description;
+    /* Solution alternative appenchild */
     // document.querySelector('.item__img').appendChild(document.createElement('img'));
     // document.querySelector('.item__img img').src = product.imageUrl;
     // document.querySelector('.item__img img').alt = product.altTxt;
