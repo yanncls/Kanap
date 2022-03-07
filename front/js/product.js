@@ -66,9 +66,12 @@ postCartBtn.addEventListener('click', (e) => {
     const color = document.querySelector('#colors').value;
     const quantity = document.querySelector('#quantity').value;
     const idItem = new URL(location.href).searchParams.get('_id');
-    let product = { color, quantity, idItem };
-    addBasket(product);
-    console.log("le panier est enregistré")
+    // condition à valider pour envoyer au panier 
+    if (quantity >= 1 && color) {
+        let product = { color, quantity, idItem };
+        addBasket(product);
+        console.log("le panier est enregistré")
+    }
 });
 // sauvegarder panier localstorage
 function saveBasket(basket) {
@@ -102,6 +105,18 @@ function addBasket(product) {
     }
     saveBasket(basket);
 }
+
+// let col = document.querySelector('#colors').value
+// console.log(col)
+// let qty = document.querySelector('#quantity').value
+// console.log(qty)
+// function basketIsValid(col, qty) {
+//     if (col != undefined && qty >= 1) {
+//         return true
+//     } else {
+//         return false
+//     }
+// }
 
 
 

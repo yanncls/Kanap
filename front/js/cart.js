@@ -224,7 +224,7 @@ function send(contact, products) {
     .then(function (res) {
       res.json().then(data => {
         console.log(data)
-        //isoler l'objet orderId
+        //isoler le string orderId
         let id = data[Object.keys(data)[Object.keys(data).length - 1]]
         // passer l'id dans l'url
         console.log(id)
