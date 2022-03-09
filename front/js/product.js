@@ -72,6 +72,8 @@ postCartBtn.addEventListener('click', (e) => {
         let product = { color, quantity, idItem };
         addBasket(product);
         console.log("le panier est enregistré")
+    } else {
+        alert("veuillez entrez une quantité et une couleur")
     }
 });
 // sauvegarder panier localstorage

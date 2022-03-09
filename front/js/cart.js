@@ -59,7 +59,7 @@ sumBasket(basket).then(() => {
   removeListeners()
 })
 
-// Mettre à jour panier
+// Mettre à jour quantité panier
 function updateQuantity(quantity, id, color) {
   const productIndex = basket.findIndex(elem => elem.idItem == id && elem.color == color)
   const product = {
@@ -94,7 +94,7 @@ function removeListeners() {
   })
 }
 
-// modifier quantité à l'article selectionné 
+// selection de l'article à modifier  
 function addQtyListeners() {
   document.querySelectorAll(".itemQuantity").forEach(qtyInput => {
     const id = qtyInput.closest('article').dataset.id
@@ -224,11 +224,13 @@ function send(contact, products) {
     .then(function (res) {
       res.json().then(data => {
         console.log(data)
+        console.log("orderId", data.orderId)
         //isoler le string orderId
-        let id = data[Object.keys(data)[Object.keys(data).length - 1]]
+        // let id = data[Object.keys(data)[Object.keys(data).length - 1]]
         // passer l'id dans l'url
-        console.log(id)
-        window.location.href = `confirmation.html?orderId=${id}`
+        // console.log(id)
+        localStorage.removeItem("basket");
+        window.location.href = `confirmation.html?orderId=${data.orderId}`
       })
     })
 }
