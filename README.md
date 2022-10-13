@@ -1,8 +1,6 @@
-Kanap
+# Kanap
 
-Un site e-commerce de canapé. 
-
-Réalisé avec #javascript
+## Un site e-commerce de canapé. 
 
 ![Screenshot 2022-10-12 at 18 09 58](https://user-images.githubusercontent.com/91957898/195394673-f7c50dd5-ff81-466c-87a6-166802a8b8c8.png)
 
@@ -18,3 +16,5 @@ Sur la page panier, l'utilisateur peut modifier, supprimer ou rajouter des artic
 numéro de commande récupéré avec l'API.
 
 ![Screenshot 2022-10-12 at 18 10 37](https://user-images.githubusercontent.com/91957898/195397837-226fd268-5c17-404e-b0d5-8079a85a0b4f.png)
+
+### Réalisé avec #javascript
